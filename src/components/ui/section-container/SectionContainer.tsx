@@ -6,7 +6,7 @@ interface Props {
 
 export default function SectionContainer({ children, className }: PropsWithChildren<Props>) {
     return (
-        <section className={`p-12${className ? ` ${className}` : ''}`}>
+        <section className={`p-12 ${className ? ` ${className}` : ''}`}>
             {children}
         </section>
     )

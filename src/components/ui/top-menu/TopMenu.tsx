@@ -1,5 +1,6 @@
 'use client';
 
+import { WebFont } from '@/config/fonts';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
 import { BsFillExclamationSquareFill, BsInstagram } from 'react-icons/bs';
@@ -26,7 +27,7 @@ export default function TopMenu() {
     return (
         <>
             {/* Header Superior con Gradiente */}
-            <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white">
+            <div className={` ${WebFont.className} antialiased bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white `}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-12 text-sm">
                         <div className="flex items-center text-sm space-x-3">
