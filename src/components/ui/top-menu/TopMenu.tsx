@@ -108,7 +108,7 @@ export default function TopMenu() {
                         <div className="hidden lg:flex">
                             {[
                                 { href: "/", label: "Inicio", icon: <IoHome className='size-4' /> },
-                                { href: "#acerca", label: "Acerca de la Web", icon: <BsFillExclamationSquareFill className='size-4' /> },
+                                { href: "/about", label: "Acerca de la Web", icon: <BsFillExclamationSquareFill className='size-4' /> },
                                 { href: "#comunidad", label: "Comunidad", icon: <IoPeople className='size-4' /> },
                                 { href: "#mapa", label: "Mapa", icon: <IoMapSharp className='size-4' /> },
                                 { href: "#calendario", label: "Calendarios", icon: <IoCalendar className='size-4' /> },
@@ -144,7 +144,7 @@ export default function TopMenu() {
                             <div className="space-y-1">
                                 {[
                                     { href: "/", label: "Inicio", icon: <IoHome className='size-4' /> },
-                                    { href: "#acerca", label: "Acerca de la Web", icon: <BsFillExclamationSquareFill className='size-4' /> },
+                                    { href: "/about", label: "Acerca de la Web", icon: <BsFillExclamationSquareFill className='size-4' /> },
                                     { href: "#comunidad", label: "Comunidad", icon: <IoPeople className='size-4' /> },
                                     { href: "#mapa", label: "Mapa", icon: <IoMapSharp className='size-4' /> },
                                     { href: "#calendario", label: "Calendarios", icon: <IoCalendar className='size-4' /> },

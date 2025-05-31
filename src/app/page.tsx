@@ -16,6 +16,7 @@ import {
   FaHandshake,
   FaLightbulb,
 } from "react-icons/fa";
+import { GiPartyPopper } from "react-icons/gi";
 
 export default function Home() {
   const fadeInUp = {
@@ -96,7 +97,7 @@ export default function Home() {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, delay: 1 }}
             >
-              🎉
+              <GiPartyPopper className="size-4" />
             </motion.span>
             <span className="ml-2">Nueva plataforma - ¡Únete ahora!</span>
           </motion.div>
@@ -172,7 +173,7 @@ export default function Home() {
         </div>
       </SectionContainer>
 
-      {/* Estadísticas Animadas */}
+      {/* Estadísticas */}
       <SectionContainer className="bg-white relative">
         <div className="py-20">
           <motion.h2
@@ -229,7 +230,7 @@ export default function Home() {
         </div>
       </SectionContainer>
 
-      {/* Servicios Animados */}
+      {/* Servicios */}
       <SectionContainer className="bg-gradient-to-b from-gray-50 to-white">
         <div className="py-20">
           <motion.div
@@ -330,7 +331,7 @@ export default function Home() {
         </div>
       </SectionContainer>
 
-      {/* Recursos Animados */}
+      {/* Recursos */}
       <SectionContainer className="bg-gradient-to-br from-[#53ad35] via-[#34a32a] to-[#006633] text-white relative overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-black/10"
