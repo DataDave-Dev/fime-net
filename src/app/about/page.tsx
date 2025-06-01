@@ -1,9 +1,9 @@
 'use client'
 
 import SectionContainer from '@/components/ui/section-container/SectionContainer'
-import TitleMenu from '@/components/ui/title-menu/TitleMenu'
 import { motion } from 'framer-motion'
 import React from 'react'
+import { IoSettingsOutline } from 'react-icons/io5'
 
 export default function AboutPage() {
     const containerVariants = {
@@ -44,7 +44,7 @@ export default function AboutPage() {
                 animate="visible"
                 variants={containerVariants}
             >
-                <div className='absolute inset-0 bg-gradient-to-br from-[#53ad35]/8 via-gray-50/50 to-[#34a32a]/8 rounded-2xl'></div>
+                <div className='absolute inset-0 rounded-2xl'></div>
                 <motion.div className='relative px-12 py-16 text-center' variants={itemVariants}>
                     <motion.div 
                         className='inline-flex items-center px-4 py-2 bg-[#53ad35]/10 rounded-full text-[#53ad35] text-sm font-medium mb-6'
@@ -132,75 +132,78 @@ export default function AboutPage() {
                     </div>
                 </motion.section>
 
-                {/* Misión y Visión Rediseñada */}
+                {/* Misión y Visión */}
                 <motion.section
-                    className='bg-gradient-to-r from-gray-50 to-white rounded-3xl p-12'
+                    className='bg-gradient-to-r from-gray-50 to-white rounded-3xl p-8 md:p-12'
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
                     variants={containerVariants}
                 >
-                    <div className='grid lg:grid-cols-2 gap-16 items-center'>
-                        <motion.div className='space-y-12' variants={itemVariants}>
-                            <div className='relative'>
-                                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-[#53ad35] to-[#34a32a] rounded-full'></div>
-                                <div className='pl-8'>
-                                    <h3 className='text-2xl font-bold text-gray-900 mb-4 flex items-center'>
-                                        <span className='w-3 h-3 bg-[#53ad35] rounded-full mr-3'></span>
-                                        Misión Institucional
-                                    </h3>
-                                    <p className='text-lg text-gray-700 leading-relaxed'>
-                                        Desarrollar y mantener una plataforma tecnológica integral que optimice 
-                                        los procesos académicos, facilite el acceso a recursos educativos y 
-                                        promueva la innovación en la comunidad estudiantil de FIME.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='relative'>
-                                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-[#34a32a] to-[#006633] rounded-full'></div>
-                                <div className='pl-8'>
-                                    <h3 className='text-2xl font-bold text-gray-900 mb-4 flex items-center'>
-                                        <span className='w-3 h-3 bg-[#34a32a] rounded-full mr-3'></span>
-                                        Visión Estratégica
-                                    </h3>
-                                    <p className='text-lg text-gray-700 leading-relaxed'>
-                                        Ser reconocidos como la plataforma líder en soluciones tecnológicas 
-                                        educativas, estableciendo un estándar de excelencia que inspire a 
-                                        otras instituciones académicas a nivel nacional.
-                                    </p>
-                                </div>
+                    <motion.div className='text-center mb-12' variants={itemVariants}>
+                        <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
+                            Misión y Visión
+                        </h2>
+                        <div className='w-24 h-1 bg-gradient-to-r from-[#53ad35] to-[#34a32a] mx-auto mb-6'></div>
+                    </motion.div>
+
+                    <div className='grid lg:grid-cols-2 gap-8 lg:gap-16'>
+                        {/* Misión */}
+                        <motion.div className='relative' variants={itemVariants}>
+                            <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-[#53ad35] to-[#34a32a] rounded-full'></div>
+                            <div className='pl-8'>
+                                <h3 className='text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center'>
+                                    <span className='w-3 h-3 bg-[#53ad35] rounded-full mr-3'></span>
+                                    Misión
+                                </h3>
+                                <p className='text-base md:text-lg text-gray-700 leading-relaxed'>
+                                    Desarrollar y mantener una plataforma tecnológica integral que optimice 
+                                    los procesos académicos, facilite el acceso a recursos educativos y 
+                                    promueva la innovación en la comunidad estudiantil de FIME.
+                                </p>
                             </div>
                         </motion.div>
-                        
-                        <motion.div 
-                            className='relative'
-                            variants={itemVariants}
-                        >
-                            <div className='aspect-square bg-gradient-to-br from-[#53ad35]/5 to-[#34a32a]/10 rounded-3xl p-12 flex items-center justify-center relative overflow-hidden'>
-                                <motion.div 
-                                    className='text-8xl opacity-20'
-                                    animate={{ 
-                                        rotate: [0, 360] 
-                                    }}
-                                    transition={{ 
-                                        duration: 20, 
-                                        repeat: Infinity, 
-                                        ease: "linear" 
-                                    }}
-                                >
-                                    ⚙️
-                                </motion.div>
-                                <div className='absolute inset-0 flex items-center justify-center'>
-                                    <div className='text-center'>
-                                        <h4 className='text-2xl font-bold text-gray-900 mb-2'>FIME-Net</h4>
-                                        <p className='text-gray-600'>Plataforma Educativa</p>
-                                    </div>
-                                </div>
+
+                        {/* Visión */}
+                        <motion.div className='relative' variants={itemVariants}>
+                            <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-[#34a32a] to-[#006633] rounded-full'></div>
+                            <div className='pl-8'>
+                                <h3 className='text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center'>
+                                    <span className='w-3 h-3 bg-[#34a32a] rounded-full mr-3'></span>
+                                    Visión
+                                </h3>
+                                <p className='text-base md:text-lg text-gray-700 leading-relaxed'>
+                                    Ser reconocidos como la plataforma líder en soluciones tecnológicas 
+                                    educativas, estableciendo un estándar de excelencia que inspire a 
+                                    otras instituciones académicas a nivel nacional.
+                                </p>
                             </div>
-                            <div className='absolute -top-6 -right-6 w-20 h-20 bg-[#53ad35]/10 rounded-full'></div>
-                            <div className='absolute -bottom-6 -left-6 w-16 h-16 bg-[#34a32a]/10 rounded-full'></div>
                         </motion.div>
                     </div>
+
+                    {/* Elemento decorativo central */}
+                    <motion.div 
+                        className='flex justify-center mt-12'
+                        variants={itemVariants}
+                    >
+                        <div className='relative'>
+                            <motion.div 
+                                className='w-20 h-20 bg-gradient-to-br from-[#53ad35]/10 to-[#34a32a]/20 rounded-full flex items-center justify-center'
+                                animate={{ 
+                                    rotate: [0, 360] 
+                                }}
+                                transition={{ 
+                                    duration: 20, 
+                                    repeat: Infinity, 
+                                    ease: "linear" 
+                                }}
+                            >
+                                <span className='text-2xl'><IoSettingsOutline /></span>
+                            </motion.div>
+                            <div className='absolute -top-2 -right-2 w-6 h-6 bg-[#53ad35]/20 rounded-full'></div>
+                            <div className='absolute -bottom-2 -left-2 w-4 h-4 bg-[#34a32a]/20 rounded-full'></div>
+                        </div>
+                    </motion.div>
                 </motion.section>
 
                 {/* Estadísticas Corporativas */}
