@@ -461,7 +461,7 @@ export default function Home() {
                     animate={{ rotate: [0, 15, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <FaRocket className="text-base sm:text-xl" />
+                    <FaRocket className="text-base sm:text-xl mr-2" />
                   </motion.div>
                   Crear Cuenta Gratis</Link>
               </motion.button>

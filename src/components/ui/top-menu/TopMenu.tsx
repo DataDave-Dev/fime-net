@@ -189,7 +189,7 @@ export default function TopMenu() {
                         </Link>
 
                         <Link
-                            href="/comunidad"
+                            href="/community"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoPeople />
@@ -197,7 +197,7 @@ export default function TopMenu() {
                         </Link>
 
                         <Link
-                            href="/mapa"
+                            href="/map"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoMapSharp />
@@ -313,7 +313,7 @@ export default function TopMenu() {
                                     </Link>
 
                                     <Link
-                                        href="/comunidad"
+                                        href="/community"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -322,7 +322,7 @@ export default function TopMenu() {
                                     </Link>
 
                                     <Link
-                                        href="/mapa"
+                                        href="/map"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
