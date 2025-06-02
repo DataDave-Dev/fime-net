@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
-import { IoCalendar, IoHome, IoMapSharp, IoPeople, IoList } from 'react-icons/io5';
+import { IoCalendar, IoHome, IoMapSharp, IoPeople, IoList, IoHeart } from 'react-icons/io5';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
@@ -148,7 +148,7 @@ export default function TopMenu() {
                                     FIME-NET
                                 </h1>
                                 <p className="text-sm text-gray-600">
-                                    Desarrollado por alumnos, para alumnos.
+                                    Desarrollado por estudiantes de FIME para estudiantes de FIME.
                                 </p>
                             </div>
                         </Link>
