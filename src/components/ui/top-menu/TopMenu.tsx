@@ -2,7 +2,7 @@
 
 import { WebFont } from '@/config/fonts';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import { IoCalendar, IoHome, IoMapSharp, IoPeople, IoList } from 'react-icons/io5';
@@ -11,19 +11,10 @@ import { useRouter } from 'next/navigation';
 
 export default function TopMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isScrolled, setIsScrolled] = useState(false)
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-    
-    const { user, isLoading, error, signOut, getDisplayName } = useAuth()
-    const router = useRouter()
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10)
-        }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    const { user, isLoading, signOut, getDisplayName } = useAuth()
+    const router = useRouter()
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -35,7 +26,7 @@ export default function TopMenu() {
 
     const handleLogout = async () => {
         const result = await signOut()
-        
+
         if (result.success) {
             setIsUserMenuOpen(false)
             router.push('/')
@@ -49,7 +40,7 @@ export default function TopMenu() {
         <>
             {/* Header Superior */}
             <div className="bg-[#28313d] text-white py-2 px-4">
-                <div className="max-w-7xl mx-auto flex justify-between items-center text-sm">
+                <div className="md:px-12 mx-auto flex justify-between items-center text-sm">
                     <div className="flex items-center space-x-4">
                         <span>Bienvenido a FIME-NET</span>
                         <span className="hidden md:inline">La Comunidad Oficial de Alumnos de FIME</span>
@@ -62,7 +53,7 @@ export default function TopMenu() {
                             <div className="relative">
                                 <motion.button
                                     onClick={toggleUserMenu}
-                                    className="flex items-center space-x-2 px-3 py-1 rounded-lg font-medium transition-all duration-300 text-white hover:bg-white/10"
+                                    className="flex items-center hover:cursor-pointer space-x-2 px-3 py-1 rounded-lg font-medium transition-all duration-300 text-white hover:bg-white/10"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
@@ -93,19 +84,19 @@ export default function TopMenu() {
                                                     {user.email}
                                                 </p>
                                             </div>
-                                            
-                                            <Link 
-                                                href="/profile" 
+
+                                            <Link
+                                                href="/profile"
                                                 className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
                                                 onClick={() => setIsUserMenuOpen(false)}
                                             >
                                                 <FaUser className="text-gray-500" />
                                                 <span>Mi Perfil</span>
                                             </Link>
-                                            
-                                            <button 
+
+                                            <button
                                                 onClick={handleLogout}
-                                                className="w-full flex items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                                                className="w-full flex hover:cursor-pointer items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
                                             >
                                                 <FaSignOutAlt />
                                                 <span>Cerrar Sesión</span>
@@ -116,14 +107,13 @@ export default function TopMenu() {
                             </div>
                         ) : (
                             <div className="flex items-center space-x-3">
-                                <Link 
+                                <Link
                                     href="/auth/login"
-                                    className="text-white/90 hover:text-white transition-colors text-sm flex items-center space-x-1"
+                                    className="text-white/90 hover:text-white justify-center transition-colors text-sm flex items-center space-x-1"
                                 >
-                                    <FaSignInAlt size={12} />
                                     <span>Iniciar Sesión</span>
                                 </Link>
-                                <Link 
+                                <Link
                                     href="/auth/signup"
                                     className="bg-[#53ad35] text-white px-3 py-1 rounded-lg text-sm hover:bg-[#34a32a] transition-colors"
                                 >
@@ -131,7 +121,7 @@ export default function TopMenu() {
                                 </Link>
                             </div>
                         )}
-                        
+
                         <div className="hidden md:flex items-center space-x-3">
                             <Link href="#terminos" className="text-white/70 hover:text-white transition-colors">
                                 Términos y Condiciones
@@ -146,7 +136,7 @@ export default function TopMenu() {
 
             {/* Header Principal */}
             <div className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 py-4">
+                <div className="md:px-12 px-2 mx-auto py-4">
                     <div className="flex justify-between items-center">
                         {/* Logo */}
                         <Link href="/" className="flex items-center space-x-3">
@@ -179,51 +169,51 @@ export default function TopMenu() {
 
             {/* Navigation Menu */}
             <nav className="bg-[#53ad35] shadow-lg">
-                <div className="max-w-7xl mx-auto">
+                <div className="md:px-12 px-2 mx-auto">
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex">
-                        <Link 
-                            href="/" 
+                        <Link
+                            href="/"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoHome />
                             <span>Inicio</span>
                         </Link>
-                        
-                        <Link 
-                            href="/about" 
+
+                        <Link
+                            href="/about"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoList />
                             <span>Acerca de la Web</span>
                         </Link>
 
-                        <Link 
-                            href="/comunidad" 
+                        <Link
+                            href="/comunidad"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoPeople />
                             <span>Comunidad</span>
                         </Link>
 
-                        <Link 
-                            href="/mapa" 
+                        <Link
+                            href="/mapa"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoMapSharp />
                             <span>Mapa</span>
                         </Link>
 
-                        <Link 
-                            href="/calendarios" 
+                        <Link
+                            href="/calendarios"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <IoCalendar />
                             <span>Calendarios</span>
                         </Link>
 
-                        <Link 
-                            href="/maestros" 
+                        <Link
+                            href="/maestros"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <FaUser />
@@ -259,18 +249,18 @@ export default function TopMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="space-y-2">
-                                                <Link 
-                                                    href="/profile" 
+                                                <Link
+                                                    href="/profile"
                                                     className="flex items-center space-x-2 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-all duration-300"
                                                     onClick={() => setIsMenuOpen(false)}
                                                 >
                                                     <FaUser />
                                                     <span>Mi Perfil</span>
                                                 </Link>
-                                                
-                                                <button 
+
+                                                <button
                                                     onClick={() => {
                                                         handleLogout()
                                                         setIsMenuOpen(false)
@@ -284,7 +274,7 @@ export default function TopMenu() {
                                         </div>
                                     ) : (
                                         <div className="border-b border-white/20 pb-4 mb-4 mx-4 space-y-2">
-                                            <Link 
+                                            <Link
                                                 href="/auth/login"
                                                 className="block px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-all duration-300 flex items-center space-x-2"
                                                 onClick={() => setIsMenuOpen(false)}
@@ -292,8 +282,8 @@ export default function TopMenu() {
                                                 <FaSignInAlt />
                                                 <span>Iniciar Sesión</span>
                                             </Link>
-                                            
-                                            <Link 
+
+                                            <Link
                                                 href="/auth/signup"
                                                 className="block px-4 py-3 bg-white/20 text-white rounded-xl font-medium text-center transition-all duration-300"
                                                 onClick={() => setIsMenuOpen(false)}
@@ -304,17 +294,17 @@ export default function TopMenu() {
                                     )}
 
                                     {/* Mobile Navigation Links */}
-                                    <Link 
-                                        href="/" 
+                                    <Link
+                                        href="/"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
                                         <IoHome />
                                         <span>Inicio</span>
                                     </Link>
-                                    
-                                    <Link 
-                                        href="/about" 
+
+                                    <Link
+                                        href="/about"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -322,8 +312,8 @@ export default function TopMenu() {
                                         <span>Acerca de la Web</span>
                                     </Link>
 
-                                    <Link 
-                                        href="/comunidad" 
+                                    <Link
+                                        href="/comunidad"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -331,8 +321,8 @@ export default function TopMenu() {
                                         <span>Comunidad</span>
                                     </Link>
 
-                                    <Link 
-                                        href="/mapa" 
+                                    <Link
+                                        href="/mapa"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -340,8 +330,8 @@ export default function TopMenu() {
                                         <span>Mapa</span>
                                     </Link>
 
-                                    <Link 
-                                        href="/calendarios" 
+                                    <Link
+                                        href="/calendarios"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
@@ -349,8 +339,8 @@ export default function TopMenu() {
                                         <span>Calendarios</span>
                                     </Link>
 
-                                    <Link 
-                                        href="/maestros" 
+                                    <Link
+                                        href="/maestros"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >

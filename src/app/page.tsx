@@ -2,6 +2,7 @@
 
 import SectionContainer from "@/components/ui/section-container/SectionContainer";
 import { motion } from 'framer-motion';
+import Link from "next/link";
 import {
   FaRocket,
   FaBookOpen,
@@ -187,7 +188,7 @@ export default function Home() {
             {[
               { icon: FaUsers, number: "2,500+", label: "Estudiantes Activos", color: "from-[#53ad35] to-[#34a32a]", textColor: "text-[#53ad35]" },
               { icon: FaUserTie, number: "150+", label: "Profesores", color: "from-[#34a32a] to-[#006633]", textColor: "text-[#34a32a]" },
-              { icon: FaGraduationCap, number: "12", label: "Carreras", color: "from-[#006633] to-[#313b48]", textColor: "text-[#006633]" },
+              { icon: FaGraduationCap, number: "11", label: "Carreras", color: "from-[#006633] to-[#313b48]", textColor: "text-[#006633]" },
               { icon: FaBook, number: "500+", label: "Recursos Disponibles", color: "from-[#313b48] to-[#28313d]", textColor: "text-[#313b48]" }
             ].map((stat, index) => (
               <motion.div
@@ -351,7 +352,7 @@ export default function Home() {
 
         <div className="py-12 sm:py-20 text-center relative z-10 px-4">
           <motion.h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
+            className="text-xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -370,7 +371,7 @@ export default function Home() {
           </motion.p>
 
           <motion.div
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8"
+            className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8"
             variants={staggerContainer}
             initial="initial"
             whileInView="animate"
@@ -392,10 +393,6 @@ export default function Home() {
                 }}
               >
                 <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1]
-                  }}
                   transition={{
                     duration: 3,
                     repeat: Infinity,
@@ -459,15 +456,14 @@ export default function Home() {
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="flex items-center justify-center space-x-2 sm:space-x-3">
+                <Link className="flex items-center justify-center space-x-2 sm:space-x-3" href="/auth/signup">
                   <motion.div
                     animate={{ rotate: [0, 15, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
                     <FaRocket className="text-base sm:text-xl" />
                   </motion.div>
-                  <span>Crear Cuenta Gratis</span>
-                </span>
+                  Crear Cuenta Gratis</Link>
               </motion.button>
               <motion.button
                 className="group border-2 border-[#53ad35] text-[#53ad35] px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl hover:bg-[#53ad35] hover:text-white transition-all duration-300 hover:shadow-lg"
