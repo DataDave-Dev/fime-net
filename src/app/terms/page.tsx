@@ -16,11 +16,6 @@ import {
 import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5'
 
 export default function TermsPage() {
-  const currentDate = new Date().toLocaleDateString('es-MX', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,10 +59,10 @@ export default function TermsPage() {
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Al usar FIME-NET, aceptas estos términos y condiciones. Te recomendamos leerlos cuidadosamente.
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6 inline-block">
-            <p className="text-sm text-blue-800">
+          <div className="bg-green-50 border border-blue-200 rounded-xl p-4 mt-6 inline-block">
+            <p className="text-sm text-green-800">
               <FaCalendarAlt className="inline mr-2" />
-              Última actualización: {currentDate}
+              Última actualización: 2 de Junio del 2025
             </p>
           </div>
         </motion.div>
