@@ -168,12 +168,12 @@ export default function ErrorPage() {
                     </p>
                     <div className='flex flex-col sm:flex-row gap-4 justify-center text-sm'>
                         <motion.a 
-                            href="mailto:support-fime-net@gmail.com"
+                            href="mailto:soportefimenet@gmail.com"
                             className='inline-flex items-center text-[#53ad35] hover:text-[#34a32a] transition-colors'
                             whileHover={{ scale: 1.05 }}
                         >
                             <span className='mr-2'><IoMail /></span>
-                            support-fime-net@gmail.com
+                            soportefimenet@gmail.com
                         </motion.a>
                         <motion.div 
                             className='inline-flex items-center text-gray-500'
