@@ -123,10 +123,10 @@ export default function TopMenu() {
                         )}
 
                         <div className="hidden md:flex items-center space-x-3">
-                            <Link href="#terminos" className="text-white/70 hover:text-white transition-colors">
+                            <Link href="/terms" className="text-white/70 hover:text-white transition-colors">
                                 Términos y Condiciones
                             </Link>
-                            <Link href="#faq" className="text-white/70 hover:text-white transition-colors">
+                            <Link href="/faq" className="text-white/70 hover:text-white transition-colors">
                                 FAQ
                             </Link>
                         </div>
