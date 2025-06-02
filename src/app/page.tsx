@@ -474,7 +474,7 @@ export default function Home() {
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="flex items-center justify-center space-x-2 sm:space-x-3">
+                <Link href="/about" className="flex items-center justify-center space-x-2 sm:space-x-3">
                   <motion.div
                     animate={{ rotate: [0, 180, 360] }}
                     transition={{ duration: 4, repeat: Infinity }}
@@ -482,7 +482,7 @@ export default function Home() {
                     <FaLightbulb className="text-base sm:text-xl" />
                   </motion.div>
                   <span>Saber Más</span>
-                </span>
+                </Link>
               </motion.button>
             </motion.div>
           </div>
