@@ -26,9 +26,9 @@
 - 🏫 **Información académica centralizada** - Horarios, calendarios y recursos
 - 👥 **Comunidad estudiantil activa** - Conecta con compañeros de tu carrera
 - 🗺️ **Navegación interactiva** - Mapa digital de la facultad
-- 📚 **Gestión de materias** - Organiza tu carga académica
+- 📚 **Gestión de materias** - Obten información para organizar tu carga académica
 - 📅 **Eventos y actividades** - Mantente al día con la vida universitaria
-- 👨‍🏫 **Directorio de profesores** - Información de contacto y evaluaciones
+- 👨‍🏫 **Lista de profesores** - Revisa a los mejores maestros para cada materia que necesites
 
 Todo en una interfaz moderna, responsiva y pensada para la experiencia móvil.
 
