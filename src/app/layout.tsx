@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import TopMenu from "@/components/ui/top-menu/TopMenu";
 import Footer from "@/components/ui/footer/Footer";
 import { WebFont } from "@/config/fonts";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "FIME-NET | Comunidad de Alumnos de la Facultad de Ingeniería Mecánica y Eléctrica",
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body className={`${WebFont} antialiased`}>
         <TopMenu />
         {children}
+        <Analytics />
         <Footer />
       </body>
     </html>
