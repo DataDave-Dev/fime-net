@@ -163,63 +163,6 @@ export default function Home() {
         </div>
       </SectionContainer>
 
-      {/* Estadísticas - Responsive */}
-      <SectionContainer className="bg-white relative">
-        <div className="py-12 sm:py-20 px-4">
-          <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <span className="bg-gradient-to-r from-[#313b48] to-[#28313d] bg-clip-text text-transparent">
-              FIME-NET en Números
-            </span>
-          </motion.h2>
-
-          <motion.div
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {[
-              { icon: FaUsers, number: "2,500+", label: "Estudiantes Activos", color: "from-[#53ad35] to-[#34a32a]", textColor: "text-[#53ad35]" },
-              { icon: FaUserTie, number: "150+", label: "Profesores", color: "from-[#34a32a] to-[#006633]", textColor: "text-[#34a32a]" },
-              { icon: FaGraduationCap, number: "11", label: "Carreras", color: "from-[#006633] to-[#313b48]", textColor: "text-[#006633]" },
-              { icon: FaBook, number: "500+", label: "Recursos Disponibles", color: "from-[#313b48] to-[#28313d]", textColor: "text-[#313b48]" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                className="text-center group"
-                variants={scaleIn}
-                whileHover={{ scale: 1.05 }}
-              >
-                <motion.div
-                  className={`bg-gradient-to-br ${stat.color} w-12 sm:w-16 md:w-20 h-12 sm:h-16 md:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transform transition-all duration-300 shadow-lg`}
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <stat.icon className="text-lg sm:text-xl md:text-2xl text-white" />
-                </motion.div>
-                <motion.h3
-                  className={`text-2xl sm:text-3xl md:text-4xl font-bold ${stat.textColor} mb-1 sm:mb-2`}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  {stat.number}
-                </motion.h3>
-                <p className="text-[#28313d] font-medium text-xs sm:text-sm md:text-base">{stat.label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </SectionContainer>
-
       {/* Servicios - Responsive */}
       <SectionContainer className="bg-gradient-to-b from-gray-50 to-white">
         <div className="py-12 sm:py-20 px-4">

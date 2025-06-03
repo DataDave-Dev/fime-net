@@ -1,6 +1,7 @@
 'use client'
 
 import SectionContainer from '@/components/ui/section-container/SectionContainer'
+import DynamicStats from '@/components/ui/stats/DynamicStats'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import React from 'react'
@@ -133,24 +134,6 @@ export default function AboutPage() {
                             <FaChartBar />
                             <span>Ver Estadísticas</span>
                         </motion.button>
-                    </motion.div>
-
-                    {/* Stats rápidas */}
-                    <motion.div
-                        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto'
-                        variants={itemVariants}
-                    >
-                        {[
-                            { number: '1,200+', label: 'Estudiantes' },
-                            { number: '50+', label: 'Recursos' },
-                            { number: '99.9%', label: 'Uptime' },
-                            { number: '24/7', label: 'Soporte' }
-                        ].map((stat, i) => (
-                            <div key={i} className='text-center'>
-                                <div className='text-2xl md:text-3xl font-bold text-[#53ad35]'>{stat.number}</div>
-                                <div className='text-sm text-gray-600'>{stat.label}</div>
-                            </div>
-                        ))}
                     </motion.div>
                 </div>
             </motion.div>
@@ -296,7 +279,7 @@ export default function AboutPage() {
                     </motion.div>
                 </motion.section>
 
-                {/* Estadísticas Corporativas */}
+                {/* Estadísticas Corporativas - ACTUALIZADA */}
                 <motion.section
                     className='bg-gradient-to-r from-[#53ad35] to-[#34a32a] rounded-3xl overflow-hidden relative'
                     initial="hidden"
@@ -308,46 +291,19 @@ export default function AboutPage() {
                     <div className='relative z-10 p-16'>
                         <motion.div className='text-center mb-16' variants={itemVariants}>
                             <h2 className='text-3xl md:text-4xl font-bold text-white mb-4'>
-                                Impacto y Alcance
+                                Impacto y Alcance en Tiempo Real
                             </h2>
                             <p className='text-xl text-white/90 max-w-2xl mx-auto'>
-                                Métricas que demuestran nuestro compromiso con la comunidad estudiantil
+                                Métricas actualizadas que demuestran nuestro compromiso con la comunidad estudiantil
                             </p>
+                            <div className="mt-4 inline-flex items-center bg-white/10 rounded-full px-4 py-2">
+                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></div>
+                                <span className="text-sm text-white/80">Datos actualizados cada 5 minutos</span>
+                            </div>
                         </motion.div>
 
-                        <div className='grid md:grid-cols-4 gap-8'>
-                            {[
-                                { number: '1,200+', label: 'Estudiantes Activos', sublabel: 'usuarios registrados' },
-                                { number: '99.9%', label: 'Tiempo de Actividad', sublabel: 'disponibilidad garantizada' },
-                                { number: '50+', label: 'Recursos Digitales', sublabel: 'materiales centralizados' },
-                                { number: '24/7', label: 'Soporte Técnico', sublabel: 'asistencia continua' }
-                            ].map((stat, index) => (
-                                <motion.div
-                                    key={index}
-                                    className='text-center group'
-                                    variants={cardVariants}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ type: "spring", stiffness: 300 }}
-                                >
-                                    <div className='bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20'>
-                                        <motion.div
-                                            className='text-4xl lg:text-5xl font-bold text-white mb-2'
-                                            initial={{ scale: 0 }}
-                                            whileInView={{ scale: 1 }}
-                                            transition={{
-                                                type: "spring",
-                                                stiffness: 500,
-                                                delay: index * 0.1
-                                            }}
-                                        >
-                                            {stat.number}
-                                        </motion.div>
-                                        <div className='text-lg font-semibold text-white mb-1'>{stat.label}</div>
-                                        <div className='text-sm text-white/70'>{stat.sublabel}</div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
+                        {/* Componente de estadísticas dinámicas */}
+                        <DynamicStats />
                     </div>
 
                     {/* Elementos decorativos */}
