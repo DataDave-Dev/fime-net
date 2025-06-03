@@ -213,7 +213,7 @@ export default function TopMenu() {
                         </Link>
 
                         <Link
-                            href="/maestros"
+                            href="/teachers-list"
                             className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white"
                         >
                             <FaUser />

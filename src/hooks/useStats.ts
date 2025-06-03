@@ -27,10 +27,6 @@ export function useStats() {
     try {
       setStats(prev => ({ ...prev, isLoading: true, error: null }))
 
-      // Usuarios activos (últimos 30 días)
-      const thirtyDaysAgo = new Date()
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
       // Total de usuarios
       const { data: totalUsersData, error: totalError } = await supabase
         .from('profiles')

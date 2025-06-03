@@ -60,7 +60,7 @@ export default function AboutPage() {
 
     return (
         <SectionContainer>
-            {/* Hero Section Mejorado */}
+            {/* Hero Section */}
             <motion.div
                 className='relative min-h-screen flex items-center justify-center'
                 initial="hidden"

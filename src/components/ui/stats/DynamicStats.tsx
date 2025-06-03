@@ -24,7 +24,7 @@ export default function DynamicStats() {
     { 
       number: isLoading ? '---' : `${totalUsers.toLocaleString()}+`, 
       label: 'Total de Estudiantes', 
-      sublabel: 'últimos 30 días',
+      sublabel: 'comunidad estudiantil',
       icon: <FaUsers />,
       color: 'text-green-500',
       bgColor: 'bg-green-100'

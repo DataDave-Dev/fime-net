@@ -6,9 +6,6 @@ import Link from "next/link";
 import {
   FaRocket,
   FaBookOpen,
-  FaUsers,
-  FaUserTie,
-  FaGraduationCap,
   FaBook,
   FaComments,
   FaCalendarAlt,
@@ -42,7 +39,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Section con Animaciones - Responsive */}
+      {/* Hero Section con Animaciones */}
       <SectionContainer className="bg-gradient-to-br from-green-50 via-emerald-50 to-slate-50 relative overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-grid-pattern opacity-5"
