@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-
-interface Stats {
-  totalUsers: number
-  newUsersThisMonth: number
-  isLoading: boolean
-  error: string | null
-}
+import { Stats } from '@/types/interface'
 
 export function useStats() {
   const [stats, setStats] = useState<Stats>({
