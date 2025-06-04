@@ -340,7 +340,7 @@ export default function TopMenu() {
                                     </Link>
 
                                     <Link
-                                        href="/maestros"
+                                        href="/teachers-list"
                                         className="block px-6 py-3 text-white hover:bg-white/10 transition-all duration-300 flex items-center space-x-2"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
