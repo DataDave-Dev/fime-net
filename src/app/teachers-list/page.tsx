@@ -5,13 +5,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDebounce } from '@/hooks'
 import { createClient } from '@/utils/supabase/client'
+import { Career, Subject, Teachers } from '@/types/interface'
 import {
-  FaSearch,
   FaUser,
   FaEnvelope,
   FaStar,
-  FaGraduationCap,
-  FaFilter,
   FaSort,
   FaChevronDown,
   FaUserTie,
@@ -31,60 +29,24 @@ import {
 } from 'react-icons/io5'
 import Link from 'next/link'
 
-interface Teacher {
-  id: string
-  first_name: string
-  last_name: string
-  email: string
-  avatar_url?: string
-  degree?: string
-  is_active: boolean
-  created_at: string
-  subjects: Array<{
-    id: string
-    name: string
-    code: string
-    credits: number
-  }>
-  average_rating: number
-  total_reviews: number
-}
-
-interface Subject {
-  id: string
-  name: string
-  code: string
-}
-
-interface Career {
-  id: string
-  name: string
-  short_name: string
-}
-
 export default function TeacherListPage() {
-  // Estados optimizados
-  const [teachers, setTeachers] = useState<Teacher[]>([])
+  const [teachers, setTeachers] = useState<Teachers[]>([])
   const [loading, setLoading] = useState(true)
   const [totalCount, setTotalCount] = useState(0)
-  
-  // Filtros con debounce
+
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedCareer, setSelectedCareer] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  
-  // Paginación
+
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize] = useState(12)
-  
-  // Debounce search para evitar consultas excesivas
+
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
-  
+
   const supabase = createClient()
 
-  // Función optimizada para fetch con paginación y filtros SQL
   const fetchTeachers = useCallback(async () => {
     setLoading(true)
     try {
@@ -113,7 +75,6 @@ export default function TeacherListPage() {
         `, { count: 'exact' })
         .eq('is_active', true)
 
-      // Aplicar filtros SQL (más eficiente)
       if (debouncedSearchTerm) {
         query = query.or(
           `first_name.ilike.%${debouncedSearchTerm}%,` +
@@ -122,16 +83,13 @@ export default function TeacherListPage() {
         )
       }
 
-      // Filtro por materia usando SQL
       if (selectedSubject) {
         query = query.eq('teacher_subjects.subjects.id', selectedSubject)
       }
 
-      // Ordenamiento SQL
       const sortField = sortBy === 'name' ? 'first_name' : 'created_at'
       query = query.order(sortField, { ascending: sortOrder === 'asc' })
 
-      // Paginación
       const from = (currentPage - 1) * pageSize
       const to = from + pageSize - 1
       query = query.range(from, to)
@@ -142,8 +100,8 @@ export default function TeacherListPage() {
 
       const processedTeachers = data?.map(teacher => {
         const reviews = teacher.teacher_reviews || []
-        const averageRating = reviews.length > 0 
-          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
+        const averageRating = reviews.length > 0
+          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
           : 0
 
         const subjectsArray = teacher.teacher_subjects
@@ -161,7 +119,6 @@ export default function TeacherListPage() {
             typeof subject.credits === 'number'
         ) as { id: string; name: string; code: string; credits: number }[]
 
-        // Remove duplicates by id
         const uniqueSubjects = flatSubjects.filter(
           (subject, index, self) =>
             index === self.findIndex(s => s.id === subject.id)
@@ -184,20 +141,17 @@ export default function TeacherListPage() {
     }
   }, [debouncedSearchTerm, selectedSubject, selectedCareer, sortBy, sortOrder, currentPage, pageSize])
 
-  // Effect con dependencias optimizadas
   useEffect(() => {
     fetchTeachers()
   }, [fetchTeachers])
 
-  // Reset página cuando cambian filtros
   useEffect(() => {
     setCurrentPage(1)
   }, [debouncedSearchTerm, selectedSubject, selectedCareer, sortBy, sortOrder])
 
-  // Componente de paginación
   const Pagination = () => {
     const totalPages = Math.ceil(totalCount / pageSize)
-    
+
     if (totalPages <= 1) return null
 
     return (
@@ -209,7 +163,7 @@ export default function TeacherListPage() {
         >
           Anterior
         </button>
-        
+
         <div className="flex space-x-1">
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             const page = i + 1
@@ -217,11 +171,10 @@ export default function TeacherListPage() {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-2 rounded-lg transition-colors ${
-                  currentPage === page
+                className={`px-3 py-2 rounded-lg transition-colors ${currentPage === page
                     ? 'bg-[#53ad35] text-white'
                     : 'bg-gray-100 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 {page}
               </button>
@@ -294,7 +247,7 @@ export default function TeacherListPage() {
     ))
   }
 
-  const TeacherCard = ({ teacher, index }: { teacher: Teacher; index: number }) => (
+  const TeacherCard = ({ teacher, index }: { teacher: Teachers; index: number }) => (
     <motion.div
       className="group bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#53ad35]/20 transition-all duration-500 overflow-hidden"
       initial={{ opacity: 0, y: 30 }}
@@ -415,7 +368,7 @@ export default function TeacherListPage() {
     </motion.div>
   )
 
-  const TeacherListItem = ({ teacher, index }: { teacher: Teacher; index: number }) => (
+  const TeacherListItem = ({ teacher, index }: { teacher: Teachers; index: number }) => (
     <motion.div
       className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#53ad35]/20 transition-all duration-300 p-4 lg:p-6"
       initial={{ opacity: 0, x: -30 }}

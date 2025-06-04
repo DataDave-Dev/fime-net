@@ -22,42 +22,8 @@ import {
   IoBarChartOutline
 } from 'react-icons/io5'
 import { User } from '@supabase/supabase-js'
-
-interface Teacher {
-  id: string
-  first_name: string
-  last_name: string
-  email: string
-  avatar_url?: string
-  degree?: string
-  is_active: boolean
-  created_at: string
-  subjects: Array<{
-    id: string
-    name: string
-    code: string
-    credits: number
-  }>
-  reviews: Array<{
-    id: string
-    rating: number
-    comment: string
-    subject: string
-    semester: string
-    is_anonymous: boolean
-    created_at: string
-    user: {
-      full_name?: string
-    }
-  }>
-  stats: {
-    total_reviews: number
-    average_rating: number
-    rating_distribution: { [key: number]: number }
-    total_students: number
-    subjects_count: number
-  }
-}
+import { formatDate } from '@/utils/actions'
+import { Teacher } from '@/types/interface'
 
 export default function TeacherProfilePage() {
   const params = useParams()
@@ -123,18 +89,6 @@ export default function TeacherProfilePage() {
         `)
         .eq('teacher_id', teacherId)
         .eq('is_active', true)
-
-      type ReviewWithProfile = {
-        id: string
-        rating: number
-        comment: string
-        subject: string
-        semester: string
-        is_anonymous: boolean
-        created_at: string
-        user_id: string
-        profiles?: { full_name?: string } | { full_name?: string }[]
-      }
 
       const { data: reviewsData, error: reviewsError } = await supabase
         .from('teacher_reviews')
@@ -246,21 +200,6 @@ export default function TeacherProfilePage() {
         }`}
       />
     ))
-  }
-
-  const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'text-green-600'
-    if (rating >= 4) return 'text-yellow-600'
-    if (rating >= 3) return 'text-orange-600'
-    return 'text-red-600'
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
   }
 
   useEffect(() => {
