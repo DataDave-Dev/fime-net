@@ -21,7 +21,6 @@ import {
   IoMailOutline,
   IoBarChartOutline
 } from 'react-icons/io5'
-import { useEffect as useAuthEffect, useState as useAuthState } from 'react'
 import { User } from '@supabase/supabase-js'
 
 interface Teacher {
@@ -264,7 +263,7 @@ export default function TeacherProfilePage() {
     })
   }
 
-  useAuthEffect(() => {
+  useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
@@ -374,62 +373,86 @@ export default function TeacherProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <SectionContainer className="py-6 lg:py-12">
-        {/* Back Button */}
+      <SectionContainer className="py-3 sm:py-6 lg:py-12 px-2 sm:px-4">
+        {/* Back Button - Optimizado para móvil */}
         <motion.button
           onClick={() => router.back()}
-          className="flex items-center space-x-2 text-gray-600 hover:text-[#53ad35] hover:cursor-pointer transition-colors mb-6 group"
+          className="flex items-center space-x-2 text-gray-600 hover:text-[#53ad35] hover:cursor-pointer transition-colors mb-4 sm:mb-6 group p-2 -ml-2 rounded-lg hover:bg-gray-50"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-          <span>Volver a la lista</span>
+          <FaArrowLeft className="group-hover:-translate-x-1 transition-transform text-sm sm:text-base" />
+          <span className="text-sm sm:text-base">Volver a la lista</span>
         </motion.button>
 
-        {/* Header Section */}
+        {/* Header Section - Completamente rediseñado para móvil */}
         <motion.div
-          className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 lg:p-10 mb-8"
+          className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-3 sm:p-6 lg:p-10 mb-4 sm:mb-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex flex-col lg:flex-row lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
-            {/* Avatar */}
-            <div className="relative">
-              {teacher.avatar_url ? (
-                <img
-                  src={teacher.avatar_url}
-                  alt={`${teacher.first_name} ${teacher.last_name}`}
-                  className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl object-cover shadow-2xl"
-                />
-              ) : (
-                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-[#53ad35] to-[#34a32a] flex items-center justify-center shadow-2xl">
-                  <FaUser className="text-white text-4xl lg:text-5xl" />
+          {/* Layout móvil vertical */}
+          <div className="flex flex-col space-y-4 sm:space-y-6 lg:flex-row lg:items-center lg:space-y-0 lg:space-x-8">
+            {/* Avatar y Rating Badge - Layout horizontal en móvil */}
+            <div className="flex items-center justify-between sm:justify-start sm:space-x-6 lg:block lg:space-x-0">
+              <div className="relative">
+                {teacher.avatar_url ? (
+                  <img
+                    src={teacher.avatar_url}
+                    alt={`${teacher.first_name} ${teacher.last_name}`}
+                    className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl object-cover shadow-2xl"
+                  />
+                ) : (
+                  <div className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#53ad35] to-[#34a32a] flex items-center justify-center shadow-2xl">
+                    <FaUser className="text-white text-xl sm:text-4xl lg:text-5xl" />
+                  </div>
+                )}
+                <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-green-500 w-5 h-5 sm:w-8 sm:h-8 rounded-full border-2 sm:border-4 border-white flex items-center justify-center">
+                  <div className="w-1 h-1 sm:w-2 sm:h-2 bg-white rounded-full"></div>
                 </div>
-              )}
-              <div className="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+
+              {/* Rating Badge - Compacto en móvil */}
+              <div className="bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center min-w-[120px] sm:min-w-[200px] lg:hidden">
+                <div className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">
+                  {teacher.stats.average_rating.toFixed(1)}
+                </div>
+                <div className="flex items-center justify-center space-x-1 mb-1 sm:mb-2">
+                  {renderStars(teacher.stats.average_rating, 'sm')}
+                </div>
+                <div className="text-xs sm:text-sm opacity-90">
+                  {teacher.stats.total_reviews} reseñas
+                </div>
               </div>
             </div>
 
             {/* Basic Info */}
             <div className="flex-1">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                    {teacher.degree} {teacher.first_name} {teacher.last_name}
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-3 sm:space-y-4 lg:space-y-0">
+                <div className="flex-1">
+                  <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-900 mb-2 leading-tight">
+                    {teacher.degree && (
+                      <span className="block text-sm sm:text-base lg:text-lg text-[#53ad35] font-semibold mb-1">
+                        {teacher.degree}
+                      </span>
+                    )}
+                    {teacher.first_name} {teacher.last_name}
                   </h1>
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <IoMailOutline className="mr-2" />
-                    <a href={`mailto:${teacher.email}`} className="hover:text-[#53ad35] transition-colors">
+                  <div className="flex items-center text-gray-600 text-sm sm:text-base">
+                    <IoMailOutline className="mr-2 text-base sm:text-lg" />
+                    <a 
+                      href={`mailto:${teacher.email}`} 
+                      className="hover:text-[#53ad35] transition-colors truncate"
+                    >
                       {teacher.email}
                     </a>
                   </div>
                 </div>
 
-                {/* Rating Badge */}
-                <div className="bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white rounded-2xl p-6 text-center min-w-[200px]">
+                {/* Rating Badge - Desktop */}
+                <div className="hidden lg:block bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white rounded-2xl p-6 text-center min-w-[200px]">
                   <div className="text-3xl font-bold mb-2">
                     {teacher.stats.average_rating.toFixed(1)}
                   </div>
@@ -445,28 +468,28 @@ export default function TeacherProfilePage() {
           </div>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid - Optimizado para móvil */}
         <motion.div
-          className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 lg:gap-6 mb-4 sm:mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           {[
             {
-              label: 'Materias Impartidas',
+              label: 'Materias',
               value: teacher.stats.subjects_count,
               icon: FaBook,
               color: 'from-blue-500 to-blue-600'
             },
             {
-              label: 'Total Estudiantes',
+              label: 'Estudiantes',
               value: teacher.stats.total_students,
               icon: FaUsers,
               color: 'from-green-500 to-green-600'
             },
             {
-              label: 'Rating Promedio',
+              label: 'Rating',
               value: teacher.stats.average_rating.toFixed(1),
               icon: FaStar,
               color: 'from-yellow-500 to-yellow-600'
@@ -474,62 +497,63 @@ export default function TeacherProfilePage() {
           ].map((stat, index) => (
             <motion.div
               key={index}
-              className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+              className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-lg border border-gray-100"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
               whileHover={{ scale: 1.02, y: -5 }}
             >
-              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center mb-4`}>
-                <stat.icon className="text-white text-xl" />
+              <div className={`w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-r ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4`}>
+                <stat.icon className="text-white text-sm sm:text-xl" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
+              <div className="text-lg sm:text-2xl font-bold text-gray-900 mb-0.5 sm:mb-1">{stat.value}</div>
+              <div className="text-xs sm:text-sm text-gray-600 leading-tight">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Subjects */}
+        {/* Content Grid - Stack en móvil */}
+        <div className="space-y-4 sm:space-y-6 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
+          {/* Subjects Column */}
           <motion.div
             className="lg:col-span-1"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <FaBookOpen className="mr-3 text-[#53ad35]" />
-                Materias Impartidas
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+                <FaBookOpen className="mr-2 sm:mr-3 text-[#53ad35] text-base sm:text-lg" />
+                <span className="text-sm sm:text-base lg:text-xl">Materias Impartidas</span>
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3 max-h-48 sm:max-h-none overflow-y-auto">
                 {teacher.subjects.map((subject, index) => (
                   <motion.div
                     key={subject.id}
-                    className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200 hover:shadow-md transition-all duration-300"
+                    className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-200 hover:shadow-md transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-[#53ad35]">{subject.code}</span>
-                      <span className="bg-[#53ad35]/10 text-[#53ad35] text-xs px-2 py-1 rounded-full font-medium">
-                        {subject.credits} créditos
+                    <div className="flex items-center justify-between mb-1 sm:mb-2">
+                      <span className="font-bold text-[#53ad35] text-sm sm:text-base">{subject.code}</span>
+                      <span className="bg-[#53ad35]/10 text-[#53ad35] text-xs px-2 py-0.5 sm:py-1 rounded-full font-medium">
+                        {subject.credits} cr
                       </span>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{subject.name}</h4>
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight">{subject.name}</h4>
                   </motion.div>
                 ))}
               </div>
             </div>
 
-            {/* Rating Distribution */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <IoBarChartOutline className="mr-3 text-[#53ad35]" />
-                Distribución de Calificaciones
+            {/* Rating Distribution - Compacto en móvil */}
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+                <IoBarChartOutline className="mr-2 sm:mr-3 text-[#53ad35] text-base sm:text-lg" />
+                <span className="text-sm sm:text-base lg:text-xl">Calificaciones</span>
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {[5, 4, 3, 2, 1].map((rating) => {
                   const count = teacher.stats.rating_distribution[rating] || 0
                   const percentage = teacher.stats.total_reviews > 0 
@@ -537,12 +561,12 @@ export default function TeacherProfilePage() {
                     : 0
 
                   return (
-                    <div key={rating} className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-1 min-w-[80px]">
-                        <span className="text-sm font-medium text-gray-700">{rating}</span>
-                        <FaStar className="text-yellow-400 text-sm" />
+                    <div key={rating} className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="flex items-center space-x-1 min-w-[50px] sm:min-w-[80px]">
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">{rating}</span>
+                        <FaStar className="text-yellow-400 text-xs sm:text-sm" />
                       </div>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                      <div className="flex-1 bg-gray-200 rounded-full h-1.5 sm:h-2 overflow-hidden">
                         <motion.div
                           className="h-full bg-gradient-to-r from-[#53ad35] to-[#34a32a] rounded-full"
                           initial={{ width: 0 }}
@@ -550,7 +574,7 @@ export default function TeacherProfilePage() {
                           transition={{ duration: 1, delay: 0.5 }}
                         />
                       </div>
-                      <span className="text-sm text-gray-600 min-w-[40px]">{count}</span>
+                      <span className="text-xs sm:text-sm text-gray-600 min-w-[30px] sm:min-w-[40px] text-right">{count}</span>
                     </div>
                   )
                 })}
@@ -558,33 +582,33 @@ export default function TeacherProfilePage() {
             </div>
           </motion.div>
 
-          {/* Right Column - Reviews */}
+          {/* Reviews Column */}
           <motion.div
             className="lg:col-span-2"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
-                <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                  <FaComment className="mr-3 text-[#53ad35]" />
-                  Reseñas de Estudiantes ({teacher.stats.total_reviews})
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+              <div className="flex flex-col space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
+                  <FaComment className="mr-2 sm:mr-3 text-[#53ad35] text-base sm:text-lg" />
+                  <span className="text-sm sm:text-base lg:text-xl">Reseñas ({teacher.stats.total_reviews})</span>
                 </h3>
 
-                {/* Filters */}
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                {/* Filters - Stack en móvil */}
+                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3">
                   <select
                     value={selectedRatingFilter || ''}
                     onChange={(e) => setSelectedRatingFilter(e.target.value ? Number(e.target.value) : null)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
+                    className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
                   >
-                    <option value="">Todas las calificaciones</option>
-                    <option value="5">5 estrellas</option>
-                    <option value="4">4 estrellas</option>
-                    <option value="3">3 estrellas</option>
-                    <option value="2">2 estrellas</option>
-                    <option value="1">1 estrella</option>
+                    <option value="">Todas las ⭐</option>
+                    <option value="5">5 ⭐</option>
+                    <option value="4">4 ⭐</option>
+                    <option value="3">3 ⭐</option>
+                    <option value="2">2 ⭐</option>
+                    <option value="1">1 ⭐</option>
                   </select>
                   
                   <input
@@ -592,45 +616,45 @@ export default function TeacherProfilePage() {
                     placeholder="Filtrar por materia..."
                     value={selectedSubjectFilter}
                     onChange={(e) => setSelectedSubjectFilter(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
+                    className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
                   />
                 </div>
               </div>
 
-              {/* Reviews List */}
-              <div className="space-y-6">
+              {/* Reviews List - Optimizado para móvil */}
+              <div className="space-y-3 sm:space-y-6">
                 <AnimatePresence>
                   {filteredReviews.length > 0 ? (
                     filteredReviews.map((review, index) => (
                       <motion.div
                         key={review.id}
-                        className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200"
+                        className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-200"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4, delay: index * 0.1 }}
                       >
-                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex flex-col space-y-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0 mb-3 sm:mb-4">
                           <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-[#53ad35] to-[#34a32a] rounded-full flex items-center justify-center">
-                              <FaUserGraduate className="text-white" />
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#53ad35] to-[#34a32a] rounded-full flex items-center justify-center flex-shrink-0">
+                              <FaUserGraduate className="text-white text-sm sm:text-base" />
                             </div>
-                            <div>
-                              <h4 className="font-semibold text-gray-900">
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
                                 {review.user.full_name}
                               </h4>
-                              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                                <span>{review.subject}</span>
-                                <span>•</span>
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-xs sm:text-sm text-gray-600">
+                                <span className="truncate">{review.subject}</span>
+                                <span className="hidden sm:inline">•</span>
                                 <span>{review.semester}</span>
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end space-y-1">
+                          <div className="flex items-center justify-between sm:flex-col sm:items-end space-x-2 sm:space-x-0 sm:space-y-1">
                             <div className="flex items-center space-x-1">
                               {renderStars(review.rating, 'sm')}
                             </div>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 whitespace-nowrap">
                               {formatDate(review.created_at)}
                             </span>
                           </div>
@@ -638,8 +662,8 @@ export default function TeacherProfilePage() {
 
                         {review.comment && (
                           <div className="relative">
-                            <FaQuoteLeft className="absolute top-0 left-0 text-[#53ad35]/20 text-2xl" />
-                            <p className="text-gray-700 leading-relaxed pl-8 italic">
+                            <FaQuoteLeft className="absolute top-0 left-0 text-[#53ad35]/20 text-lg sm:text-2xl" />
+                            <p className="text-gray-700 leading-relaxed pl-6 sm:pl-8 italic text-sm sm:text-base">
                               "{review.comment}"
                             </p>
                           </div>
@@ -648,15 +672,15 @@ export default function TeacherProfilePage() {
                     ))
                   ) : (
                     <motion.div
-                      className="text-center py-12"
+                      className="text-center py-8 sm:py-12"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >
-                      <FaComment className="text-4xl text-gray-300 mx-auto mb-4" />
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      <FaComment className="text-3xl sm:text-4xl text-gray-300 mx-auto mb-3 sm:mb-4" />
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                         No hay reseñas con esos filtros
                       </h4>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 text-sm sm:text-base">
                         Intenta ajustar los filtros para ver más reseñas
                       </p>
                     </motion.div>
@@ -666,10 +690,10 @@ export default function TeacherProfilePage() {
 
               {/* Show More Button */}
               {teacher.reviews.length > 5 && !showAllReviews && (
-                <div className="text-center mt-8">
+                <div className="text-center mt-6 sm:mt-8">
                   <button
                     onClick={() => setShowAllReviews(true)}
-                    className="bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                    className="w-full sm:w-auto bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white px-6 sm:px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
                   >
                     Ver todas las reseñas ({teacher.reviews.length})
                   </button>
@@ -679,52 +703,52 @@ export default function TeacherProfilePage() {
           </motion.div>
         </div>
 
-        {/* Add Review Section */}
+        {/* Add Review Section - Optimizado para móvil */}
         {user && (
           <motion.div
-            className="bg-gradient-to-r from-[#53ad35]/5 to-[#34a32a]/5 rounded-2xl border-2 border-dashed border-[#53ad35]/20 p-6 mt-8"
+            className="bg-gradient-to-r from-[#53ad35]/5 to-[#34a32a]/5 rounded-xl sm:rounded-2xl border-2 border-dashed border-[#53ad35]/20 p-4 sm:p-6 mt-6 sm:mt-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <div className="text-center mb-6">
-              <h4 className="text-xl font-bold text-gray-900 mb-2 flex items-center justify-center">
-                <FaStar className="mr-2 text-[#53ad35]" />
-                Comparte tu experiencia
+            <div className="text-center mb-4 sm:mb-6">
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 flex items-center justify-center">
+                <FaStar className="mr-2 text-[#53ad35] text-base sm:text-lg" />
+                <span className="text-base sm:text-xl">Comparte tu experiencia</span>
               </h4>
-              <p className="text-gray-600">
-                ¿Has tomado clases con {teacher.first_name}? Ayuda a otros estudiantes compartiendo tu opinión
+              <p className="text-gray-600 text-sm sm:text-base">
+                ¿Has tomado clases con {teacher.first_name}? Ayuda a otros estudiantes
               </p>
             </div>
 
             {!showReviewForm ? (
               <motion.button
                 onClick={() => setShowReviewForm(true)}
-                className="w-full bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <FaComment />
+                <FaComment className="text-sm sm:text-base" />
                 <span>Escribir Reseña</span>
               </motion.button>
             ) : (
               <motion.div
-                className="space-y-6"
+                className="space-y-4 sm:space-y-6"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 transition={{ duration: 0.4 }}
               >
-                {/* Rating Selection */}
+                {/* Rating Selection - Optimizado para móvil */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
                     Calificación *
                   </label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <motion.button
                         key={star}
                         onClick={() => setReviewForm({ ...reviewForm, rating: star })}
-                        className={`text-3xl transition-colors ${
+                        className={`text-2xl sm:text-3xl transition-colors p-1 ${
                           star <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-300'
                         }`}
                         whileHover={{ scale: 1.1 }}
@@ -733,14 +757,14 @@ export default function TeacherProfilePage() {
                         <FaStar />
                       </motion.button>
                     ))}
-                    <span className="ml-4 text-sm text-gray-600 font-medium">
-                      {reviewForm.rating} de 5 estrellas
+                    <span className="ml-2 sm:ml-4 text-sm text-gray-600 font-medium">
+                      {reviewForm.rating} de 5
                     </span>
                   </div>
                 </div>
 
-                {/* Subject and Semester */}
-                <div className="grid md:grid-cols-2 gap-4">
+                {/* Subject and Semester - Stack en móvil */}
+                <div className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Materia *
@@ -748,7 +772,7 @@ export default function TeacherProfilePage() {
                     <select
                       value={reviewForm.subject}
                       onChange={(e) => setReviewForm({ ...reviewForm, subject: e.target.value })}
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none text-sm sm:text-base"
                       required
                     >
                       <option value="">Selecciona una materia</option>
@@ -767,20 +791,13 @@ export default function TeacherProfilePage() {
                     <select
                       value={reviewForm.semester}
                       onChange={(e) => setReviewForm({ ...reviewForm, semester: e.target.value })}
-                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none"
+                      className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none text-sm sm:text-base"
                       required
                     >
                       <option value="">Selecciona el semestre</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
+                      {Array.from({length: 10}, (_, i) => i + 1).map(sem => (
+                        <option key={sem} value={sem.toString()}>{sem}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -793,13 +810,13 @@ export default function TeacherProfilePage() {
                   <textarea
                     value={reviewForm.comment}
                     onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                    placeholder="Comparte tu experiencia con este profesor. ¿Cómo fueron las clases? ¿Qué recomendarías a otros estudiantes?"
-                    className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none resize-none"
-                    rows={4}
+                    placeholder="Comparte tu experiencia..."
+                    className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#53ad35] focus:border-transparent outline-none resize-none text-sm sm:text-base"
+                    rows={3}
                     maxLength={500}
                   />
                   <div className="text-right text-xs text-gray-500 mt-1">
-                    {reviewForm.comment.length}/500 caracteres
+                    {reviewForm.comment.length}/500
                   </div>
                 </div>
 
@@ -817,23 +834,23 @@ export default function TeacherProfilePage() {
                   </label>
                 </div>
 
-                {/* Form Actions */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                {/* Form Actions - Stack en móvil */}
+                <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
                   <motion.button
                     onClick={submitReview}
                     disabled={!reviewForm.rating || !reviewForm.subject || !reviewForm.semester || submittingReview}
-                    className="flex-1 bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white py-3 px-4 sm:px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                     whileHover={{ scale: submittingReview ? 1 : 1.02 }}
                     whileTap={{ scale: submittingReview ? 1 : 0.98 }}
                   >
                     {submittingReview ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         <span>Enviando...</span>
                       </>
                     ) : (
                       <>
-                        <FaStar />
+                        <FaStar className="text-sm sm:text-base" />
                         <span>Publicar Reseña</span>
                       </>
                     )}
@@ -850,7 +867,7 @@ export default function TeacherProfilePage() {
                         is_anonymous: false
                       })
                     }}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-300"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 sm:px-6 rounded-xl font-semibold transition-colors duration-300 text-sm sm:text-base"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -862,28 +879,28 @@ export default function TeacherProfilePage() {
           </motion.div>
         )}
 
-        {/* Login Prompt for Non-Authenticated Users */}
+        {/* Login Prompt - Optimizado para móvil */}
         {!user && (
           <motion.div
-            className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-6 mt-8 text-center"
+            className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl border border-blue-200 p-4 sm:p-6 mt-6 sm:mt-8 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             <div className="mb-4">
-              <FaUser className="text-4xl text-blue-500 mx-auto mb-3" />
-              <h4 className="text-lg font-bold text-gray-900 mb-2">
+              <FaUser className="text-3xl sm:text-4xl text-blue-500 mx-auto mb-3" />
+              <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                 ¿Quieres dejar una reseña?
               </h4>
-              <p className="text-gray-600 mb-4">
-                Inicia sesión para compartir tu experiencia con {teacher.first_name} y ayudar a otros estudiantes
+              <p className="text-gray-600 mb-4 text-sm sm:text-base">
+                Inicia sesión para compartir tu experiencia
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3 sm:justify-center">
               <motion.button
                 onClick={() => router.push('/auth/login')}
-                className="bg-blue-500 hover:cursor-pointer text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors duration-300"
+                className="w-full sm:w-auto bg-blue-500 hover:cursor-pointer text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors duration-300 text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -891,7 +908,7 @@ export default function TeacherProfilePage() {
               </motion.button>
               <motion.button
                 onClick={() => router.push('/auth/register')}
-                className="bg-gray-100 hover:cursor-pointer hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-300"
+                className="w-full sm:w-auto bg-gray-100 hover:cursor-pointer hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-300 text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
