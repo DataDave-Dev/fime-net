@@ -1,8 +1,9 @@
 'use client'
 
 import SectionContainer from '@/components/ui/section-container/SectionContainer'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useDebounce } from '@/hooks'
 import { createClient } from '@/utils/supabase/client'
 import {
   FaSearch,
@@ -62,52 +63,32 @@ interface Career {
 }
 
 export default function TeacherListPage() {
+  // Estados optimizados
   const [teachers, setTeachers] = useState<Teacher[]>([])
-  const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([])
-  const [subjects, setSubjects] = useState<Subject[]>([])
-  const [careers, setCareers] = useState<Career[]>([])
   const [loading, setLoading] = useState(true)
+  const [totalCount, setTotalCount] = useState(0)
+  
+  // Filtros con debounce
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSubject, setSelectedSubject] = useState('')
   const [selectedCareer, setSelectedCareer] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [showFilters, setShowFilters] = useState(false)
-  const [showMobileFilters, setShowMobileFilters] = useState(false)
-
+  
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize] = useState(12)
+  
+  // Debounce search para evitar consultas excesivas
+  const debouncedSearchTerm = useDebounce(searchTerm, 300)
+  
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchInitialData()
-  }, [])
-
-  useEffect(() => {
-    fetchTeachers()
-  }, [])
-
-  useEffect(() => {
-    applyFiltersAndSort()
-  }, [teachers, searchTerm, selectedSubject, selectedCareer, sortBy, sortOrder])
-
-  const fetchInitialData = async () => {
-    try {
-      const [subjectsData, careersData] = await Promise.all([
-        supabase.from('subjects').select('id, name, code').eq('is_active', true).order('name'),
-        supabase.from('careers').select('id, name, short_name').eq('is_active', true).order('name')
-      ])
-
-      setSubjects(subjectsData.data || [])
-      setCareers(careersData.data || [])
-    } catch (error) {
-      console.error('Error fetching initial data:', error)
-    }
-  }
-
-  const fetchTeachers = async () => {
+  // Función optimizada para fetch con paginación y filtros SQL
+  const fetchTeachers = useCallback(async () => {
     setLoading(true)
     try {
-      const { data: teachersData, error } = await supabase
+      let query = supabase
         .from('teachers')
         .select(`
           id,
@@ -129,27 +110,62 @@ export default function TeacherListPage() {
           teacher_reviews (
             rating
           )
-        `)
+        `, { count: 'exact' })
         .eq('is_active', true)
+
+      // Aplicar filtros SQL (más eficiente)
+      if (debouncedSearchTerm) {
+        query = query.or(
+          `first_name.ilike.%${debouncedSearchTerm}%,` +
+          `last_name.ilike.%${debouncedSearchTerm}%,` +
+          `email.ilike.%${debouncedSearchTerm}%`
+        )
+      }
+
+      // Filtro por materia usando SQL
+      if (selectedSubject) {
+        query = query.eq('teacher_subjects.subjects.id', selectedSubject)
+      }
+
+      // Ordenamiento SQL
+      const sortField = sortBy === 'name' ? 'first_name' : 'created_at'
+      query = query.order(sortField, { ascending: sortOrder === 'asc' })
+
+      // Paginación
+      const from = (currentPage - 1) * pageSize
+      const to = from + pageSize - 1
+      query = query.range(from, to)
+
+      const { data, error, count } = await query
 
       if (error) throw error
 
-      const processedTeachers: Teacher[] = teachersData?.map(teacher => {
+      const processedTeachers = data?.map(teacher => {
         const reviews = teacher.teacher_reviews || []
-        const averageRating = reviews.length > 0
-          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+        const averageRating = reviews.length > 0 
+          ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
           : 0
 
-        const allSubjects = (teacher.teacher_subjects || [])
-          .map(ts => ts.subjects)
-          .filter(subject => subject !== null);
+        const subjectsArray = teacher.teacher_subjects
+          ?.map(ts => ts.subjects)
+          .filter(subject => subject !== null) || []
 
-        const flatSubjects = allSubjects.flat();
+        const flatSubjects = subjectsArray.flatMap((s: any) =>
+          Array.isArray(s) ? s : [s]
+        ).filter(
+          (subject: any) =>
+            subject &&
+            typeof subject.id === 'string' &&
+            typeof subject.name === 'string' &&
+            typeof subject.code === 'string' &&
+            typeof subject.credits === 'number'
+        ) as { id: string; name: string; code: string; credits: number }[]
 
+        // Remove duplicates by id
         const uniqueSubjects = flatSubjects.filter(
           (subject, index, self) =>
-            subject && index === self.findIndex(s => s && s.id === subject.id)
-        );
+            index === self.findIndex(s => s.id === subject.id)
+        )
 
         return {
           ...teacher,
@@ -160,81 +176,91 @@ export default function TeacherListPage() {
       }) || []
 
       setTeachers(processedTeachers)
+      setTotalCount(count || 0)
     } catch (error) {
       console.error('Error fetching teachers:', error)
     } finally {
-      setLoading(false
-      )
+      setLoading(false)
     }
+  }, [debouncedSearchTerm, selectedSubject, selectedCareer, sortBy, sortOrder, currentPage, pageSize])
+
+  // Effect con dependencias optimizadas
+  useEffect(() => {
+    fetchTeachers()
+  }, [fetchTeachers])
+
+  // Reset página cuando cambian filtros
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [debouncedSearchTerm, selectedSubject, selectedCareer, sortBy, sortOrder])
+
+  // Componente de paginación
+  const Pagination = () => {
+    const totalPages = Math.ceil(totalCount / pageSize)
+    
+    if (totalPages <= 1) return null
+
+    return (
+      <div className="flex items-center justify-center space-x-2 mt-8">
+        <button
+          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 transition-colors"
+        >
+          Anterior
+        </button>
+        
+        <div className="flex space-x-1">
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const page = i + 1
+            return (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-2 rounded-lg transition-colors ${
+                  currentPage === page
+                    ? 'bg-[#53ad35] text-white'
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              >
+                {page}
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 transition-colors"
+        >
+          Siguiente
+        </button>
+      </div>
+    )
   }
 
-  const applyFiltersAndSort = () => {
-    let filtered = [...teachers]
+  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [careers, setCareers] = useState<Career[]>([])
+  const [showFilters, setShowFilters] = useState(false)
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
 
-    // Search filter
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase()
-      filtered = filtered.filter(teacher =>
-        teacher.first_name.toLowerCase().includes(searchLower) ||
-        teacher.last_name.toLowerCase().includes(searchLower) ||
-        teacher.email.toLowerCase().includes(searchLower) ||
-        teacher.degree?.toLowerCase().includes(searchLower) ||
-        teacher.subjects.some(subject =>
-          subject.name.toLowerCase().includes(searchLower) ||
-          subject.code.toLowerCase().includes(searchLower)
-        )
-      )
+  useEffect(() => {
+    fetchInitialData()
+  }, [])
+
+  const fetchInitialData = async () => {
+    try {
+      const [subjectsData, careersData] = await Promise.all([
+        supabase.from('subjects').select('id, name, code').eq('is_active', true).order('name'),
+        supabase.from('careers').select('id, name, short_name').eq('is_active', true).order('name')
+      ])
+
+      setSubjects(subjectsData.data || [])
+      setCareers(careersData.data || [])
+    } catch (error) {
+      console.error('Error fetching initial data:', error)
     }
-
-    // Subject filter
-    if (selectedSubject) {
-      filtered = filtered.filter(teacher =>
-        teacher.subjects.some(subject => subject.id === selectedSubject)
-      )
-    }
-
-    // Career filter
-    if (selectedCareer) {
-      // This would need additional logic based on your career-subject relationships
-    }
-
-    filtered.sort((a, b) => {
-      let aValue, bValue
-
-      switch (sortBy) {
-        case 'name':
-          aValue = `${a.first_name} ${a.last_name}`.toLowerCase()
-          bValue = `${b.first_name} ${b.last_name}`.toLowerCase()
-          break
-        case 'rating':
-          aValue = a.average_rating
-          bValue = b.average_rating
-          break
-        case 'reviews':
-          aValue = a.total_reviews
-          bValue = b.total_reviews
-          break
-        case 'subjects':
-          aValue = a.subjects.length
-          bValue = b.subjects.length
-          break
-        default:
-          aValue = a.first_name.toLowerCase()
-          bValue = b.first_name.toLowerCase()
-      }
-
-      if (typeof aValue === 'string') {
-        return sortOrder === 'asc'
-          ? aValue.localeCompare(bValue as string)
-          : (bValue as string).localeCompare(aValue)
-      } else {
-        return sortOrder === 'asc'
-          ? (aValue as number) - (bValue as number)
-          : (bValue as number) - (aValue as number)
-      }
-    })
-
-    setFilteredTeachers(filtered)
   }
 
   const clearFilters = () => {
@@ -513,6 +539,8 @@ export default function TeacherListPage() {
     }
   ]
 
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <SectionContainer className="py-6 lg:py-12">
@@ -650,7 +678,7 @@ export default function TeacherListPage() {
 
             <div className="flex items-center justify-between lg:justify-end space-x-4">
               <span className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
-                <span className="font-semibold text-[#53ad35]">{filteredTeachers.length}</span> de {teachers.length} profesores
+                <span className="font-semibold text-[#53ad35]">{teachers.length}</span> de {teachers.length} profesores
               </span>
             </div>
           </div>
@@ -834,73 +862,49 @@ export default function TeacherListPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Teachers Grid/List */}
+        {/* Teachers Grid/List con skeleton loading */}
         <div className="relative">
           {loading ? (
-            <div className="flex items-center justify-center py-20 lg:py-32">
-              <motion.div
-                className="text-center"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="w-16 h-16 lg:w-20 lg:h-20 border-4 border-[#53ad35]/20 border-t-[#53ad35] rounded-full animate-spin mx-auto mb-6"></div>
-                <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-2">Cargando profesores...</h3>
-                <p className="text-gray-600">Obteniendo la información más actualizada</p>
-              </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: pageSize }).map((_, index) => (
+                <div key={index} className="bg-white rounded-2xl p-6 animate-pulse">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-16 h-16 bg-gray-300 rounded-2xl"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                      <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-gray-300 rounded"></div>
+                    <div className="h-3 bg-gray-300 rounded w-3/4"></div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : filteredTeachers.length === 0 ? (
-            <motion.div
-              className="text-center py-20 lg:py-32"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="text-6xl lg:text-8xl mb-6">🔍</div>
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
-                No se encontraron profesores
-              </h3>
-              <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                Intenta ajustar tus criterios de búsqueda o filtros para encontrar más resultados
-              </p>
-              <button
-                onClick={clearFilters}
-                className="bg-gradient-to-r from-[#53ad35] to-[#34a32a] text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
-              >
-                Limpiar filtros
-              </button>
-            </motion.div>
           ) : (
-            <motion.div
-              className={
-                viewMode === 'grid'
-                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8'
-                  : 'space-y-4 lg:space-y-6'
-              }
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              layout
-            >
-              <AnimatePresence>
-                {filteredTeachers.map((teacher, index) => (
-                  <motion.div
-                    key={teacher.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {viewMode === 'grid' ? (
-                      <TeacherCard teacher={teacher} index={index} />
-                    ) : (
-                      <TeacherListItem teacher={teacher} index={index} />
-                    )}
-                  </motion.div>
+            <>
+              <motion.div
+                className={
+                  viewMode === 'grid'
+                    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                    : 'space-y-4'
+                }
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                {teachers.map((teacher, index) => (
+                  viewMode === 'grid' ? (
+                    <TeacherCard key={teacher.id} teacher={teacher} index={index} />
+                  ) : (
+                    <TeacherListItem key={teacher.id} teacher={teacher} index={index} />
+                  )
                 ))}
-              </AnimatePresence>
-            </motion.div>
+              </motion.div>
+
+              <Pagination />
+            </>
           )}
         </div>
       </SectionContainer>
