@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -77,3 +77,28 @@ export async function signInWithGoogle() {
 
   redirect(data.url);
 }
+
+export const signUp = async (email: string, password: string) => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  return { data, error };
+};
+
+export const signIn = async (email: string, password: string) => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  return { data, error };
+};
