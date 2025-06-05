@@ -9,12 +9,14 @@ import {
   FaChalkboardTeacher,
   FaUsers,
   FaBook,
-  FaStar,
   FaChartBar,
   FaCog,
   FaChevronLeft,
   FaChevronRight,
-  FaGraduationCap
+  FaGraduationCap,
+  FaPlus,
+  FaListAlt,
+  FaLink
 } from 'react-icons/fa'
 import { IoSchool } from 'react-icons/io5'
 
@@ -36,13 +38,23 @@ const menuItems: MenuItem[] = [
     name: 'Maestros',
     href: '/admin/teachers',
     icon: FaChalkboardTeacher,
-    // subItems: [
-    //   {
-    //     name: 'Listado',
-    //     href: '/admin/teachers',
-    //     icon: FaUsers,
-    //   },
-    // ]
+    subItems: [
+      {
+        name: 'Lista de Maestros',
+        href: '/admin/teachers',
+        icon: FaListAlt,
+      },
+      {
+        name: 'Agregar Maestro',
+        href: '/admin/teachers/create',
+        icon: FaPlus,
+      },
+      {
+        name: 'Asignar a Materias',
+        href: '/admin/teachers/assignments',
+        icon: FaLink,
+      }
+    ]
   },
   {
     name: 'Materias',
@@ -88,11 +100,20 @@ export default function AdminSidebar() {
     )
   }
 
-  const isActive = (href: string) => {
+  const isActive = (href: string, isSubItem: boolean = false) => {
     if (href === '/admin') {
       return pathname === '/admin'
     }
-    return pathname.startsWith(href)
+    
+    if (isSubItem) {
+      return pathname === href
+    }
+    
+   return pathname.startsWith(href) && (
+      pathname === href || 
+      pathname.charAt(href.length) === '/' ||
+      pathname.length === href.length
+    )
   }
 
   return (
@@ -225,7 +246,7 @@ export default function AdminSidebar() {
                         key={subItem.name}
                         href={subItem.href}
                         className={`flex items-center px-3 py-2 text-sm rounded-lg transition-all duration-200 ${
-                          isActive(subItem.href)
+                          isActive(subItem.href, true)
                             ? 'bg-[#53ad35]/10 text-[#53ad35] border-l-2 border-[#53ad35]'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}

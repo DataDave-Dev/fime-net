@@ -80,3 +80,37 @@ export interface TeacherFormData {
   degree: string
   is_active: boolean
 }
+
+export interface Subject {
+    id: string
+    name: string
+    code: string
+    credits: number
+    subject_type: string
+    description?: string
+    prerequisites?: string[]
+    is_active: boolean
+    is_laboratory: boolean
+    created_at: string
+    updated_at: string
+}
+
+export interface TeacherSubject {
+    id: string
+    teacher_id: string
+    subject_id: string
+    semester: string
+    is_active: boolean
+    teacher: Teacher
+    subject: Subject
+}
+
+export interface SubjectFormData {
+    name: string
+    code: string
+    credits: number
+    subject_type: string
+    description: string
+    prerequisites: string[]
+    is_laboratory: boolean
+}
