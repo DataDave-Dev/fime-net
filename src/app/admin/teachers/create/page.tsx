@@ -19,10 +19,12 @@ import { TeacherFormData } from '@/types/interface'
 
 export default function CreateTeacherPage() {
   const [formData, setFormData] = useState<TeacherFormData>({
+    id: '',
     first_name: '',
     last_name: '',
     email: '',
-    degree: ''
+    degree: '',
+    is_active: true
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Partial<TeacherFormData>>({})
