@@ -70,7 +70,7 @@ export function LoginForm() {
 
   return (
     <motion.div
-      className="w-full max-w-md mx-auto"
+      className="w-full max-w-md mx-auto py-12"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
