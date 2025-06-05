@@ -243,17 +243,6 @@ export default function TopMenu() {
                             <FaUser />
                             <span>Lista de Maestros</span>
                         </Link>
-
-                        {/* Enlace de Admin - Solo para administradores en desktop */}
-                        {isAdmin && (
-                            <Link
-                                href="/admin"
-                                className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white bg-white/10"
-                            >
-                                <IoSettings />
-                                <span>Administrador</span>
-                            </Link>
-                        )}
                     </div>
 
                     {/* Mobile Navigation */}
