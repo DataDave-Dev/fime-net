@@ -209,7 +209,19 @@ export default function TeacherListPage() {
         supabase.from('careers').select('id, name, short_name').eq('is_active', true).order('name')
       ])
 
-      setSubjects(subjectsData.data || [])
+      setSubjects(
+        (subjectsData.data || []).map((subject: any) => ({
+          id: subject.id,
+          name: subject.name,
+          code: subject.code,
+          credits: subject.credits ?? 0,
+          subject_type: subject.subject_type ?? '',
+          is_active: subject.is_active ?? true,
+          is_laboratory: subject.is_laboratory ?? false,
+          created_at: subject.created_at ?? '',
+          updated_at: subject.updated_at ?? ''
+        }))
+      )
       setCareers(careersData.data || [])
     } catch (error) {
       console.error('Error fetching initial data:', error)
