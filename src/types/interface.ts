@@ -71,3 +71,12 @@ export interface Career {
   name: string
   short_name: string
 }
+
+export interface TeacherFormData {
+  id: string
+  first_name: string
+  last_name: string
+  email: string
+  degree: string
+  is_active: boolean
+}

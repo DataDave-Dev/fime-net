@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
-import { IoCalendar, IoHome, IoMapSharp, IoPeople, IoList, IoHeart } from 'react-icons/io5';
+import { IoCalendar, IoHome, IoMapSharp, IoPeople, IoList, IoSettings } from 'react-icons/io5';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
@@ -13,8 +13,10 @@ export default function TopMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
-    const { user, isLoading, signOut, getDisplayName } = useAuth()
+    const { user, profile, isLoading, signOut, getDisplayName } = useAuth()
     const router = useRouter()
+
+    const isAdmin = profile?.role === 'admin'
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -57,13 +59,18 @@ export default function TopMenu() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
-                                    <div className="w-6 h-6 bg-gradient-to-br from-[#53ad35] to-[#34a32a] rounded-full flex items-center justify-center">
+                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                                        isAdmin 
+                                            ? 'bg-gradient-to-br from-red-500 to-red-600' 
+                                            : 'bg-gradient-to-br from-[#53ad35] to-[#34a32a]'
+                                    }`}>
                                         <span className="text-white text-xs font-bold">
                                             {getDisplayName(user).charAt(0).toUpperCase()}
                                         </span>
                                     </div>
                                     <span className="hidden sm:block text-sm">
                                         {getDisplayName(user)}
+                                        {isAdmin && <span className="ml-1 text-red-300">(Admin)</span>}
                                     </span>
                                 </motion.button>
 
@@ -79,6 +86,11 @@ export default function TopMenu() {
                                             <div className="px-4 py-3 border-b border-gray-100">
                                                 <p className="text-sm font-medium text-gray-900">
                                                     {getDisplayName(user)}
+                                                    {isAdmin && (
+                                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                            Admin
+                                                        </span>
+                                                    )}
                                                 </p>
                                                 <p className="text-xs text-gray-500 truncate">
                                                     {user.email}
@@ -94,9 +106,21 @@ export default function TopMenu() {
                                                 <span>Mi Perfil</span>
                                             </Link>
 
+                                            {/* Opción de administrador - Solo para admins */}
+                                            {isAdmin && (
+                                                <Link
+                                                    href="/admin"
+                                                    className="flex items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
+                                                    onClick={() => setIsUserMenuOpen(false)}
+                                                >
+                                                    <IoSettings className="text-red-500" />
+                                                    <span>Panel de Administrador</span>
+                                                </Link>
+                                            )}
+
                                             <button
                                                 onClick={handleLogout}
-                                                className="w-full flex hover:cursor-pointer items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                                                className="w-full flex hover:cursor-pointer items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
                                             >
                                                 <FaSignOutAlt />
                                                 <span>Cerrar Sesión</span>
@@ -219,6 +243,17 @@ export default function TopMenu() {
                             <FaUser />
                             <span>Lista de Maestros</span>
                         </Link>
+
+                        {/* Enlace de Admin - Solo para administradores en desktop */}
+                        {isAdmin && (
+                            <Link
+                                href="/admin"
+                                className="flex items-center space-x-2 px-6 py-4 text-white hover:bg-white/10 transition-all duration-300 border-b-2 border-transparent hover:border-white bg-white/10"
+                            >
+                                <IoSettings />
+                                <span>Administrador</span>
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Navigation */}
@@ -235,7 +270,11 @@ export default function TopMenu() {
                                     {user ? (
                                         <div className="border-b border-white/20 pb-4 mb-4 mx-4">
                                             <div className="flex items-center space-x-3 mb-3">
-                                                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                                    isAdmin 
+                                                        ? 'bg-red-500/30' 
+                                                        : 'bg-white/20'
+                                                }`}>
                                                     <span className="text-white font-bold">
                                                         {getDisplayName(user).charAt(0).toUpperCase()}
                                                     </span>
@@ -243,6 +282,11 @@ export default function TopMenu() {
                                                 <div>
                                                     <p className="font-medium text-white">
                                                         {getDisplayName(user)}
+                                                        {isAdmin && (
+                                                            <span className="ml-2 text-xs bg-red-500/50 px-2 py-0.5 rounded">
+                                                                Admin
+                                                            </span>
+                                                        )}
                                                     </p>
                                                     <p className="text-sm text-white/70">
                                                         {user.email}
@@ -259,6 +303,18 @@ export default function TopMenu() {
                                                     <FaUser />
                                                     <span>Mi Perfil</span>
                                                 </Link>
+
+                                                {/* Enlace de Admin - Solo para administradores en móvil */}
+                                                {isAdmin && (
+                                                    <Link
+                                                        href="/admin"
+                                                        className="flex items-center space-x-2 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-all duration-300 bg-red-500/20"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        <IoSettings />
+                                                        <span>Panel de Administrador</span>
+                                                    </Link>
+                                                )}
 
                                                 <button
                                                     onClick={() => {

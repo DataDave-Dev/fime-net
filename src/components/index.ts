@@ -8,3 +8,6 @@ export * from './auth/login-form/LoginForm'
 export * from './auth/signup-form/SignUpForm'
 export * from './auth/google-button/SignInWithGoogleButton'
 export * from './auth/confirm-content/ConfirmContent'
+
+export * from './admin/admin-sidebar/AdminSidebar'
+export * from './admin/admin-header/AdminHeader'
